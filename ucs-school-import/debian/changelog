@@ -1,3 +1,9 @@
+ucs-school-import (18.0.54) unstable; urgency=medium
+
+  * Bug #57673: Updated link in Django front end.
+
+ -- Alexander Steffen <steffen@univention.de>  Wed, 06 Nov 2024 09:58:59 +0100
+
 ucs-school-import (18.0.53) unstable; urgency=medium
 
   * Bug #57728: Fix Kelvin hook for OX connector

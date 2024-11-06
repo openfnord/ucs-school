@@ -13,9 +13,11 @@ Changelog
 Released on 2024-11-10
 ======================
 
-Source package *ucs-school-import* in version ``18.0.53``:
+Source package *ucs-school-import* in version ``18.0.54``:
 
 * Fixed: The import hook ``create_new_ox_contexts_kelvin.py`` failed to create users when the default context is used (:uv:bug:`57728`).
+* Fixed: The Django front end of the import API did provide an outdated, broken link which has been replaced (:uv:bug:`57673`).
+
 
 .. _changelog-ucsschool-2024-10-17:
 
