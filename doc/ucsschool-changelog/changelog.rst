@@ -8,7 +8,16 @@
 Changelog
 *********
 
-.. _changelog-ucsschool-2024-10-16:
+.. _changelog-ucsschool-2024-11-10:
+
+Released on 2024-11-10
+======================
+
+Source package *ucs-school-import* in version ``18.0.53``:
+
+* Fixed: The import hook ``create_new_ox_contexts_kelvin.py`` failed to create users when the default context is used (:uv:bug:`57728`).
+
+.. _changelog-ucsschool-2024-10-17:
 
 Released on 2024-10-17
 ======================

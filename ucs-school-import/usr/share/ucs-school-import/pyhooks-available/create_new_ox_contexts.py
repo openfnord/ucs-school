@@ -34,7 +34,7 @@ from ucsschool.importer.utils.user_pyhook import UserPyHook
 from ucsschool.lib.models.utils import ucr
 from univention.udm import UDM, CreateError
 
-DEFAULT_CONTEXT_ID = "10"
+DEFAULT_CONTEXT_ID = 10
 
 
 class CreateNewContexts(UserPyHook):
@@ -75,17 +75,7 @@ class CreateNewContexts(UserPyHook):
         ox_context.position = "cn=open-xchange,{}".format(ucr["ldap/base"])
         ox_context.props.name = "context{}".format(ctx_id)
         ox_context.props.contextid = ctx_id
-        for prop in (
-            "hostname",
-            "oxDBServer",
-            "oxQuota",
-            "oxadmindaemonversion",
-            "oxintegrationversion",
-            "oxgroupwareversion",
-            "oxguiversion",
-        ):
-            val = getattr(self.default_context.props, prop)
-            setattr(ox_context.props, prop, val)
+        ox_context.props.oxQuota = self.default_context.props.oxQuota
 
         if self.dry_run:
             self.logger.info("Dry-run: skipping creation of OX context {!r}.".format(ctx_id))
