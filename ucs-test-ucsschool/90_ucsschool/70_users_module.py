@@ -10,6 +10,7 @@
 
 from __future__ import print_function
 
+from collections import namedtuple
 from copy import deepcopy
 
 import pytest
@@ -17,7 +18,6 @@ from ldap.filter import filter_format
 
 import univention.testing.strings as uts
 from univention.config_registry import handler_set
-from univention.testing import utils
 from univention.testing.ucs_samba import wait_for_drs_replication
 from univention.testing.ucsschool.importusers import get_mail_domain
 from univention.testing.ucsschool.klasse import Klasse
@@ -25,89 +25,73 @@ from univention.testing.ucsschool.user import User
 from univention.testing.ucsschool.workgroup import Workgroup
 from univention.testing.umc import Client
 
+UserCreationParameters = namedtuple("UserCreationParameters", ["role", "classes", "schools"])
+#  UserCreationParameters
+#  role: str
+#  classes: dict[str:str]
+#  schools: list[str]
+
+
+def _create_user(user_params: UserCreationParameters, ucr, remove_from_school=None, connection=None):
+    print("\n>>>> Creating %s user...\n" % user_params.role)
+    user = User(
+        school=user_params.schools[0],
+        role=user_params.role,
+        school_classes=deepcopy(user_params.classes),
+        schools=user_params.schools,
+        connection=connection,
+    )
+
+    user.create()
+    user.verify()
+    user.check_get()
+    user.check_query([user.dn])
+
+    new_attrs = {
+        "email": "%s@%s" % (uts.random_name(), get_mail_domain()),
+        "firstname": uts.random_name(),
+        "lastname": uts.random_name(),
+        "password": uts.random_string(20),
+    }
+    user.edit(new_attrs)
+    wait_for_drs_replication(filter_format("cn=%s", (user.username,)))
+
+    # Passwords are not returned via the get request, so it is not expected
+    new_attrs["password"] = None
+    user.check_get(expected_attrs=new_attrs)
+    user.verify()
+    school_classes = deepcopy(user.school_classes)
+    try:
+        school_classes.pop(remove_from_school)
+    except KeyError:
+        pass
+    user.remove(remove_from_school)
+    # importusers expects that the class groups are moved as well as the user during a school change
+    # schoolwizard does not do that -> reset the school classes that got modified during the school
+    # move see bug #47208
+    user.school_classes = school_classes
+    user.verify()
+
+    return user
+
 
 def _test(student_classes, teacher_classes, schools, ucr, remove_from_school=None, connection=None):
     print("\n>>>> Creating 4 users...\n")
+    user_params = [
+        UserCreationParameters("student", student_classes, schools),
+        UserCreationParameters("teacher", teacher_classes, schools),
+        UserCreationParameters("staff", {}, schools),
+        UserCreationParameters("teacher_staff", teacher_classes, schools),
+    ]
     users = []
-
-    user = User(
-        school=schools[0],
-        role="student",
-        school_classes=deepcopy(student_classes),
-        schools=schools,
-        connection=connection,
-    )
-    user.create()
-    user.verify()
-    user.check_get()
-    users.append(user)
-
-    user = User(
-        school=schools[0],
-        role="teacher",
-        school_classes=deepcopy(teacher_classes),
-        schools=schools,
-        connection=connection,
-    )
-    user.create()
-    user.verify()
-    user.check_get()
-    users.append(user)
-
-    user = User(
-        school=schools[0], role="staff", school_classes={}, schools=schools, connection=connection
-    )
-    user.create()
-    user.verify()
-    user.check_get()
-    users.append(user)
-
-    user = User(
-        school=schools[0],
-        role="teacher_staff",
-        school_classes=deepcopy(teacher_classes),
-        schools=schools,
-        connection=connection,
-    )
-    user.create()
-    user.verify()
-    user.check_get()
-    users.append(user)
-
-    users[0].check_query([users[0].dn, users[1].dn])
-
-    print("\n>>>> Editing and removing (remove_from_school=%r) 4 users...\n" % (remove_from_school,))
-    for num, user in enumerate(users):
-        new_attrs = {
-            "email": "%s@%s" % (uts.random_name(), get_mail_domain()),
-            "firstname": "first_name%d" % num,
-            "lastname": "last_name%d" % num,
-            "password": uts.random_string(20),
-        }
-        user.edit(new_attrs)
-        wait_for_drs_replication(filter_format("cn=%s", (user.username,)))
-
-        # Passwords are not returned via the get request, so it is not expected
-        new_attrs["password"] = None
-        user.check_get(expected_attrs=new_attrs)
-        user.verify()
-        school_classes = deepcopy(user.school_classes)
-        try:
-            school_classes.pop(remove_from_school)
-        except KeyError:
-            pass
-        user.remove(remove_from_school)
-        # importusers expects that the class groups are moved as well as the user during a school change
-        # schoolwizard does not do that -> reset the school classes that got modified during the school
-        # move see bug #47208
-        user.school_classes = school_classes
-        utils.wait_for_replication()
-        user.verify()
+    for params in user_params:
+        user = _create_user(params, ucr, remove_from_school, connection)
+        users.append(user)
 
     return users
 
 
-def test_users_module(schoolenv, ucr):
+def test_users_module_base(schoolenv, ucr):
     umc_connection = Client.get_test_connection(ucr.get("ldap/master"))
     (ou, oudn), (ou2, oudn2) = schoolenv.create_multiple_ous(2, name_edudc=ucr.get("hostname"))
     class_01 = Klasse(school=ou, connection=umc_connection)
@@ -145,7 +129,6 @@ def test_users_module(schoolenv, ucr):
         user.verify()
         user.remove()
         wait_for_drs_replication(filter_format("cn=%s", (user.username,)), should_exist=False)
-        utils.wait_for_replication()
         user.verify()
 
     print("\n>>>> Testing module with users in 2 OUs (primary: {} secondary: {}).".format(ou, ou2))
@@ -157,7 +140,6 @@ def test_users_module(schoolenv, ucr):
         user.get()
         user.verify()
         user.remove()
-        utils.wait_for_replication()
         wait_for_drs_replication(filter_format("cn=%s", (user.username,)), should_exist=False)
         user.verify()
 
@@ -195,7 +177,6 @@ def test_users_module_workgroups_attribute(schoolenv, ucr):
     user.remove()
     wg.remove()
     cl.remove()
-    utils.wait_for_replication()
     wait_for_drs_replication(filter_format("cn=%s", (user.username,)), should_exist=False)
     user.verify()
 

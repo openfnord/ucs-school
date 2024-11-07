@@ -1,3 +1,9 @@
+ucs-test-ucsschool (7.3.198) unstable; urgency=medium
+
+  * Issue #1274: Rewrite users module test.
+
+ -- Alexander Steffen <steffen@univention.de>  Thu, 07 Nov 2024 08:08:02 +0100
+
 ucs-test-ucsschool (7.3.197) unstable; urgency=medium
 
   * Issue #1300: Changed test to check new capabilities of exam module.
