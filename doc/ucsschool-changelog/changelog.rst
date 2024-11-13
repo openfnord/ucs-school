@@ -19,6 +19,10 @@ Source package *ucs-school-import* in version ``18.0.55``:
 * Fixed: The Django front end of the import API did provide an outdated, broken link which has been replaced (:uv:bug:`57673`).
 * Fixed: When an unhandled error occurred during the graphical user import, no detailed error information was shown in the error log (:uv:bug:`57607`).
 
+Source package *ucs-school-veyon-windows* in version ``4.9.0.0-ucs5.0-0``
+
+* Updated: New version of the Veyon Windows client (:uv:bug:`57702`).
+
 .. _changelog-ucsschool-2024-10-17:
 
 Released on 2024-10-17
