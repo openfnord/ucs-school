@@ -1,3 +1,9 @@
+ucs-school-import (18.0.55) unstable; urgency=medium
+
+  * Bug #57607: Ensure unhandled exceptions in the http api are shown in the logs.
+
+ -- Johannes Königer <koeniger@univention.de>  Mon, 18 Nov 2024 09:49:05 +0100
+
 ucs-school-import (18.0.54) unstable; urgency=medium
 
   * Bug #57673: Updated link in Django front end.

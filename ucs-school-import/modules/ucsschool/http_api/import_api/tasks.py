@@ -42,6 +42,7 @@ from __future__ import unicode_literals
 
 import logging
 import time
+import traceback
 
 from celery import shared_task
 from celery.utils.log import get_task_logger
@@ -121,12 +122,19 @@ def run_import_job(task, importjob_id):
             runner.errors.append(
                 UcsSchoolImportFatalError("An unknown error terminated the import job: {}".format(exc))
             )
+            runner.logger.error(
+                "An unknown error terminated the import job: {}\n{}".format(
+                    exc, "".join(traceback.format_exc())
+                )
+            )
         runner.logger.info("-- Finished import. --")
 
     importjob = UserImportJob.objects.get(pk=importjob_id)
     importjob.status = JOB_FINISHED if success else JOB_ABORTED
     importjob.save(update_fields=("status",))
-    return success, runner.user_import_summary_str
+    return success, "{}\n{}".format(
+        runner.user_import_summary_str, "\n".join(str(err) for err in runner.errors)
+    )
 
 
 @shared_task(bind=True)
