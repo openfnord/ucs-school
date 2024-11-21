@@ -22,8 +22,8 @@ msgid "Changelog"
 msgstr "Changelog"
 
 #: ../../changelog.rst:14
-msgid "Released on 2024-11-19"
-msgstr "Veröffentlicht am 19. November 2024"
+msgid "Released on 2024-11-21"
+msgstr "Veröffentlicht am 21. November 2024"
 
 #: ../../changelog.rst:16
 msgid "Source package *ucs-school-import* in version ``18.0.55``:"

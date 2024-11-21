@@ -8,9 +8,9 @@
 Changelog
 *********
 
-.. _changelog-ucsschool-2024-11-19:
+.. _changelog-ucsschool-2024-11-21:
 
-Released on 2024-11-19
+Released on 2024-11-21
 ======================
 
 Source package *ucs-school-import* in version ``18.0.55``:
