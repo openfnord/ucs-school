@@ -37,7 +37,7 @@ Weiterführende Hinweise zu Multi-Server-Umgebungen finden sich in
 :cite:t:`ucsschool-admin`.
 
 UCS steht als 64 Bit-Variante (*amd64*) kostenlos im `Download-Bereich
-<https://www.univention.de/download/download-ucs/>`_ zur Verfügung. Alternativ
+<https://www.univention.de/produkte/download/>`_ zur Verfügung. Alternativ
 kann UCS auch in der Amazon EC2 Cloud installiert (siehe
 :ref:`installation-amazon-ec2` in :cite:t:`ucs-manual`) und für |UCSUAS|
 verwendet werden. Des Weiteren kann für die Installation von |UCSUAS| auch das
