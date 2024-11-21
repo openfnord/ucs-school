@@ -96,18 +96,18 @@ the headline.
 
 Send an internal announcement mail with the following text (**Adapt version and name**):
 
-<pre>
+```
 To: app-announcement@univention.de
 Subject: App Center: UCS@school updated
 
 Hello everyone,
 
-Errata have just been released for UCS@school 5.0 v4.
+Errata have just been released for UCS@school 5.0 v6.
 
 The changelog is available here:
 
-- https://docs.software-univention.de/ucsschool-changelog/5.0v4/en/changelog.html
-- https://docs.software-univention.de/ucsschool-changelog/5.0v4/de/changelog.html
+- https://docs.software-univention.de/ucsschool-changelog/5.0v6/en/changelog.html
+- https://docs.software-univention.de/ucsschool-changelog/5.0v6/de/changelog.html
 
 Excerpts from the changelog:
 
@@ -116,7 +116,7 @@ Excerpts from the changelog:
 
 Best regards,
 UCS@school Team
-</pre>
+```
 
 ### Close Bugzilla bugs
 
@@ -132,14 +132,15 @@ Now click on *Change Several Bugs at Once* underneath the columns.
 This will enable you to select and modify the bugs you need.
 
 Use this text as the comment for closing the mentioned bugs:
-<pre>
-Errata updates for UCS@school 5.0 v5 have been released.
 
-https://docs.software-univention.de/ucsschool-changelog/5.0v5/en/changelog.html
-https://docs.software-univention.de/ucsschool-changelog/5.0v5/de/changelog.html
+```
+Errata updates for UCS@school 5.0 v6 have been released.
+
+https://docs.software-univention.de/ucsschool-changelog/5.0v6/en/changelog.html
+https://docs.software-univention.de/ucsschool-changelog/5.0v6/de/changelog.html
 
 If this error occurs again, please clone this bug.
-</pre>
+```
 
 ### Make an announcement in chat
 
