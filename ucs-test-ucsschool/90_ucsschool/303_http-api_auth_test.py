@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 ## desc: Check if auth via HTTP-API works with non-ASCII passwords (gunicorns log is checked)
 ## roles: [domaincontroller_master]
-## tags: [apptest,ucsschool_base1,skip_in_large_schoolenv]
+## tags: [apptest,ucsschool_base1]
 ## exposure: dangerous
 ## packages: [ucs-school-import-http-api]
 
@@ -14,6 +14,7 @@ from ldap.filter import filter_format
 
 from ucsschool.http_api.client import Client, ObjectNotFound, PermissionError, ServerError
 from univention.testing.ucs_samba import wait_for_drs_replication
+from univention.testing.utils import wait_for_s4_connector_to_be_inactive
 
 
 def count_unicode_exceptions_in_gunicorn_log():
@@ -28,6 +29,7 @@ def test_http_api_auth_test(schoolenv, ucr):
     school, oudn = schoolenv.create_ou(name_edudc=ucr.get("hostname"))
     school_admin, school_admin_dn = schoolenv.create_school_admin(school, password=password)
     wait_for_drs_replication(filter_format("cn=%s", (school_admin,)))
+    wait_for_s4_connector_to_be_inactive()
 
     old_exception_count = count_unicode_exceptions_in_gunicorn_log()
 
