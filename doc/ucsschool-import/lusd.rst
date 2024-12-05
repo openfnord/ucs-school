@@ -146,6 +146,12 @@ Der LUSD Import wird über UCR konfiguriert. Folgende Variablen sind verfügbar:
    Überschreiben Sie diese Einstellung nur,
    wenn der Import von Lehrerkonten eine von der Standardkonfiguration abweichende Konfiguration verwenden soll.
 
+.. envvar:: ucsschool/import/lusd/school_authority
+
+   Name des Schulträgers, der für die Schulen verantwortlich ist.
+   Der Schulträger wird benötigt, um Fehler bei der Eingabe Dienststellennummer zu erkennen.
+   Es werden nur Dienststellennummern vom Import akzeptiert, die dem Schulträger zugeordnet sind.
+
 .. envvar:: ucsschool/import/lusd/schools/.*
 
    Damit die Daten einer Schule importiert werden können,

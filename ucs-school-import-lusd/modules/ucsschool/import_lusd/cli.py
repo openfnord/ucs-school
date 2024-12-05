@@ -74,6 +74,7 @@ class Configuration:
 
     lusd_api_url: str
     lusd_api_oauth_iss: str
+    school_authority: str
     skip_fetch: bool
     dry_run: bool
     student_import_config_path: Path
@@ -112,6 +113,8 @@ class Configuration:
             raise ConfigurationError(
                 f"Not a valid log level: {self.log_level}, choose from: {LOG_LEVELS}"
             )
+        if not self.school_authority:
+            raise ConfigurationError(f"No valid school authority configured: {self.school_authority}.")
 
 
 def normalize_schools(school_id_map: Dict[str, str]) -> Dict[str, List[str]]:
@@ -139,16 +142,22 @@ class ImportLUSD:
             sys.exit(1)
         file_config = configparser.ConfigParser()
         file_config.read(args.configuration_filepath)
-        self.configuration = Configuration(
-            student_import_config_path=Path(file_config["Settings"]["student_import_config_path"]),
-            teacher_import_config_path=Path(file_config["Settings"]["teacher_import_config_path"]),
-            dry_run=args.dry_run,
-            skip_fetch=args.skip_fetch,
-            log_level=args.log_level if args.log_level else file_config["Settings"]["log_level"],
-            school_id_map=normalize_schools(dict(file_config["SchoolMappings"])),
-            lusd_api_url=os.environ.get("LUSD_URL", "https://ucs.hessen.de"),
-            lusd_api_oauth_iss=os.environ.get("LUSD_ISS", "fa0e36138ff4d23ad2b6"),
-        )
+        try:
+            self.configuration = Configuration(
+                student_import_config_path=Path(file_config["Settings"]["student_import_config_path"]),
+                teacher_import_config_path=Path(file_config["Settings"]["teacher_import_config_path"]),
+                dry_run=args.dry_run,
+                skip_fetch=args.skip_fetch,
+                log_level=args.log_level if args.log_level else file_config["Settings"]["log_level"],
+                school_id_map=normalize_schools(dict(file_config["SchoolMappings"])),
+                lusd_api_url=os.environ.get("LUSD_URL", "https://ucs.hessen.de"),
+                lusd_api_oauth_iss=os.environ.get("LUSD_ISS", "fa0e36138ff4d23ad2b6"),
+                school_authority=file_config["Settings"].get("school_authority", None),
+            )
+        except KeyError as exc:
+            self.setup_logging()
+            logger.error(f"Incomplete configuration: {exc}.")
+            sys.exit(1)
         self.setup_logging()
         logger.debug(f"Command line arguments: {vars(args)}")
         for section in file_config.sections():
@@ -159,6 +168,8 @@ class ImportLUSD:
         except (ConfigurationError, FileNotFoundError) as exc:
             logger.error(exc)
             sys.exit(1)
+        if not self.configuration.skip_fetch:
+            self.validate_dienststellennummern()
 
     def run_import(self) -> None:
         if not self.configuration.skip_fetch:
@@ -204,33 +215,11 @@ class ImportLUSD:
 
     def fetch_school_lusd_data(self, school_ids: List[str], role: str, file_path: Path) -> Any:
         """Store LUSD data for school `school_ids` in `file_path`"""
-        token = self.get_bearer_token()
-
         if role == ROLE_STUDENT:
-            request_url = f"{self.configuration.lusd_api_url}/anfrage?format=JSON"
             action_id = "Administrationsdaten Lernende lesen"
         elif role == ROLE_TEACHER:
-            request_url = f"{self.configuration.lusd_api_url}/anfrage?format=JSON"
             action_id = "Administrationsdaten Personal lesen"
-
-        request_data = [
-            {
-                "bezeichnung": action_id,
-                "version": 1,
-                "parameter": {
-                    "schulDienststellennummern": school_ids,
-                },
-            }
-        ]
-
-        response = requests.post(
-            request_url, json=request_data, headers={"Authorization": f"Bearer {token}"}
-        )
-        try:
-            response.raise_for_status()
-        except requests.exceptions.HTTPError as exc:
-            logger.error(f"Could not retrieve LUSD data: {exc}\n{exc.response.text}")
-            sys.exit(1)
+        response = self._lusd_request(action_id, {"schulDienststellennummern": school_ids})
         response_data = response.json()
         return response_data
 
@@ -279,6 +268,58 @@ class ImportLUSD:
                 stderr=None if logger.isEnabledFor(logging.DEBUG) else subprocess.DEVNULL,
             )
             logger.info(f"Finished import for role {role}, in school {school_name}")
+
+    def _lusd_request(self, action_id: str, parameter: Dict[str, Any]) -> requests.Response:
+        token = self.get_bearer_token()
+        request_url = f"{self.configuration.lusd_api_url}/anfrage?format=JSON"
+        request_data = [
+            {
+                "bezeichnung": action_id,
+                "version": 1,
+                "parameter": parameter,
+            }
+        ]
+
+        response = requests.post(
+            request_url, json=request_data, headers={"Authorization": f"Bearer {token}"}
+        )
+        # The api returns 404 for an empty search result. E.g. search for schulDienststellennummern
+        if not response.ok and response.status_code != 404:
+            logger.error(f"Could not retrieve LUSD data: {response.text}")
+            if response.status_code == 401:
+                logger.error(
+                    "Unauthorized: Check the date on this machine and the configured private key"
+                )
+            sys.exit(1)
+        return response
+
+    def validate_dienststellennummern(self) -> None:
+        action_id = "schulische Organisationsdaten lesen"
+        school_ids = (
+            school_id
+            for school_name in self.configuration.school_id_map.keys()
+            for school_id in self.configuration.school_id_map[school_name]
+        )
+        for school_id in school_ids:
+            response = self._lusd_request(action_id, {"schulDienststellennummern": school_id})
+            if response.status_code == 404:
+                logger.error(
+                    f"Could not find any 'schultraeger' for the 'schulDienststellennummer': "
+                    f"{school_id}. Please check for mistakes or remove it."
+                )
+                sys.exit(1)
+            try:
+                school_authority = response.json()[0]["antwort"]["schulen"][0]["schultraeger"]
+            except (requests.JSONDecodeError, IndexError, KeyError):
+                logger.error(f"Could not parse 'schultraeger' from LUSD data:\n{response.text}")
+                sys.exit(1)
+            if self.configuration.school_authority.lower() != school_authority.lower():
+                logger.error(
+                    f"The 'dienststellennummer' {school_id} is not part "
+                    f"of your configured school authority {self.configuration.school_authority}. "
+                    f"This is not allowed. Please check for mistakes or remove it."
+                )
+                sys.exit(1)
 
     def setup_logging(self) -> None:
         logger.addHandler(get_stream_handler(self.configuration.log_level))

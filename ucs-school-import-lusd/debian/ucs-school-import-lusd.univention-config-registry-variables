@@ -24,3 +24,9 @@ Description[en]=Mapping of ou school names in UCS (set in place of the placehold
 Description[de]=Zuordnung des ou Schulnames in UCS (anstelle des Platzhalters einzusetzen) zu "Dienststellennummer" in LUSD (als Wert einzusetzen), mehrere Werte können Komma separiert angegeben werden.
 Type=str
 Categories=ucsschool-base
+
+[ucsschool/import/lusd/school_authority]
+Description[en]=Name of the school authority "schultraeger" in LUSD.
+Description[de]=Name des Schulträgers "schultraeger" in LUSD.
+Type=str
+Categories=ucsschool-base

@@ -97,8 +97,8 @@ def get_test_data(dienststellennummern: List[str], lusd_role: str) -> Any:
 
 
 class ServerTestHandler(BaseHTTPRequestHandler):
-    def _set_response(self) -> None:
-        self.send_response(200)
+    def _set_response(self, code: int = 200) -> None:
+        self.send_response(code)
         self.send_header("Content-type", "application/json")
         self.end_headers()
 
@@ -125,7 +125,6 @@ class ServerTestHandler(BaseHTTPRequestHandler):
         content_length = int(self.headers["Content-Length"])
         post_data = json.loads(self.rfile.read(content_length).decode("utf-8"))
         print(f"POST request,\nPath: {self.path}\nHeaders:\n{self.headers}\n\nBody:\n{post_data}\n")
-        self._set_response()
         if "Lernende" in post_data[0]["bezeichnung"]:
             assert post_data == [
                 {
@@ -144,7 +143,7 @@ class ServerTestHandler(BaseHTTPRequestHandler):
                     lusd_role="lernende",
                 )
             ).encode()
-        else:
+        elif "Personal" in post_data[0]["bezeichnung"]:
             assert post_data == [
                 {
                     "bezeichnung": "Administrationsdaten Personal lesen",
@@ -162,6 +161,47 @@ class ServerTestHandler(BaseHTTPRequestHandler):
                     lusd_role="personal",
                 )
             ).encode()
+        elif "Organisationsdaten" in post_data[0]["bezeichnung"]:
+            assert post_data == [
+                {
+                    "bezeichnung": "schulische Organisationsdaten lesen",
+                    "version": 1,
+                    "parameter": {
+                        "schulDienststellennummern": post_data[0]["parameter"][
+                            "schulDienststellennummern"
+                        ]
+                    },
+                }
+            ]
+            if post_data[0]["parameter"]["schulDienststellennummern"] == "404":
+                self._set_response(code=404)
+                self.wfile.write(b"404 Client Error")
+                return
+            if post_data[0]["parameter"]["schulDienststellennummern"] == "not in my school authority":
+                schultraeger = "not my school authority"
+            else:
+                schultraeger = "ucs test ☃"
+            response = json.dumps(
+                [
+                    {
+                        "bezeichnung": "schulische Organisationsdaten lesen",
+                        "version": 1,
+                        "antwort": {
+                            "schulen": [
+                                {
+                                    "dienststellennummer": f""
+                                    f'{post_data[0]["parameter"]["schulDienststellennummern"]}',
+                                    "a_lot_of_other_data": "data",
+                                    "schultraeger": schultraeger,
+                                },
+                            ]
+                        },
+                    }
+                ]
+            ).encode()
+        else:
+            raise Exception("Unknown request")
+        self._set_response()
         self.wfile.write(response)
 
 
@@ -243,6 +283,7 @@ def config(
 log_level = INFO
 student_import_config_path = {tmp_path / "user_import_lusd_student.json"}
 teacher_import_config_path = {tmp_path / "user_import_lusd_teacher.json"}
+school_authority = ucs test ☃
 
 [SchoolMappings]
 {schools[0]} = 1111111
@@ -470,3 +511,42 @@ def test_empty_data(config: None, schools: List[str], existing_data: None) -> No
     )
     for person in result:
         assert person[1]["ucsschoolSchool"] == [b"lusd-limbo"]
+
+
+def test_unknown_dienststellennummer(config: None, server: threading.Thread, schools: List[str]) -> None:
+    old_config = CONFIG_PATH.read_text()
+    new_config = old_config.replace(f"{schools[0]} = 1111111", f"{schools[0]} = 404")
+    CONFIG_PATH.write_text(new_config)
+    test_env = {**os.environ, "LUSD_URL": "http://localhost:32327"}
+    with pytest.raises(subprocess.CalledProcessError) as excinfo:
+        subprocess.check_output(  # nosec
+            ["/usr/share/ucs-school-import-lusd/scripts/lusd_import"],
+            env=test_env,
+            stderr=subprocess.STDOUT,
+        )
+    assert (
+        "Could not find any 'schultraeger' for the 'schulDienststellennummer': 404. "
+        "Please check for mistakes or remove it.\n"
+    ) in excinfo.value.output.decode("utf-8")
+    assert server.is_alive()
+
+
+def test_wrong_school_authority(config: None, server: threading.Thread, schools: List[str]) -> None:
+    old_config = CONFIG_PATH.read_text()
+    new_config = old_config.replace(
+        f"{schools[0]} = 1111111", f"{schools[0]} = not in my school authority"
+    )
+    CONFIG_PATH.write_text(new_config)
+    test_env = {**os.environ, "LUSD_URL": "http://localhost:32327"}
+    with pytest.raises(subprocess.CalledProcessError) as excinfo:
+        subprocess.check_output(  # nosec
+            ["/usr/share/ucs-school-import-lusd/scripts/lusd_import"],
+            env=test_env,
+            stderr=subprocess.STDOUT,
+        )
+    assert (
+        "The 'dienststellennummer' not in my school authority is not part "
+        "of your configured school authority ucs test ☃. "
+        "This is not allowed. Please check for mistakes or remove it.\n"
+    ) in excinfo.value.output.decode("utf-8")
+    assert server.is_alive()
