@@ -146,6 +146,14 @@ Der LUSD Import wird über UCR konfiguriert. Folgende Variablen sind verfügbar:
    Überschreiben Sie diese Einstellung nur,
    wenn der Import von Lehrerkonten eine von der Standardkonfiguration abweichende Konfiguration verwenden soll.
 
+.. envvar:: ucsschool/import/lusd/skip_students
+
+   Wenn diese Variable auf ``yes`` gesetzt ist, werden keine Schülerdaten heruntergeladen und importiert.
+
+.. envvar:: ucsschool/import/lusd/skip_teachers
+
+   Wenn diese Variable auf ``yes`` gesetzt ist, werden keine Lehrerdaten heruntergeladen und importiert.
+
 .. envvar:: ucsschool/import/lusd/school_authority
 
    Name des Schulträgers, der für die Schulen verantwortlich ist.
@@ -171,15 +179,16 @@ Kommandozeilenparameter
 
 Neben den UCR Variablen bietet das Skript :file:`/usr/share/ucs-school-import-lusd/scripts/lusd_import`
 noch einige Optionen, die Sie beim direkten Aufruf einstellen können.
+Optionen auf der Kommandozeile überschreiben Einstellungen in UCR.
 
-.. option:: dry_run
+.. option:: dry-run
 
    Diese Einstellung wird direkt an die |UCSUAS| Importsoftware weitergegeben und bestimmt, ob ein ``dry-run`` ausgeführt
    werden soll oder nicht.
    Mehr Informationen zum ``dry-run`` entnehmen Sie dem Abschnitt :ref:`configuration` entnehmen.
    Erlaubte Werte sind: ``true`` und ``false`` mit dem Standardwert ``false``.
 
-.. option:: skip_fetch
+.. option:: skip-fetch
 
    Diese Einstellung dient Software-Entwicklern zum Testen der LUSD Import Software.
    Erlaubte Werte sind ``true`` und ``false``.
@@ -188,10 +197,18 @@ noch einige Optionen, die Sie beim direkten Aufruf einstellen können.
    sondern arbeitet mit den bereits vorhandenen Daten.
    Belassen oder setzen Sie den Wert im allgemeinen Betrieb auf ``false``.
 
-.. option:: log_level
+.. option:: log-level
 
    Bestimmt das Log Level für die Log Einträge, die dieser Import generiert. Erlaubte Werte sind:
    ``DEBUG``, ``INFO``, ``WARNING``, ``ERROR`` und ``CRITICAL`` mit dem Standardwert ``INFO``.
+
+.. option:: skip-students
+
+   Ist diese Option gesetzt, werden keine Schülerdaten importiert.
+
+.. option:: skip-teachers
+
+   Ist diese Option gesetzt, werden keine Lehrerdaten importiert.
 
 .. _lusd-troubleshooting:
 

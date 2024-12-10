@@ -76,6 +76,8 @@ class Configuration:
     lusd_api_oauth_iss: str
     school_authority: str
     skip_fetch: bool
+    skip_students: bool
+    skip_teachers: bool
     dry_run: bool
     student_import_config_path: Path
     teacher_import_config_path: Path
@@ -148,6 +150,12 @@ class ImportLUSD:
                 teacher_import_config_path=Path(file_config["Settings"]["teacher_import_config_path"]),
                 dry_run=args.dry_run,
                 skip_fetch=args.skip_fetch,
+                skip_students=args.skip_students
+                if args.skip_students
+                else file_config["Settings"].getboolean("skip_students", False),
+                skip_teachers=args.skip_teachers
+                if args.skip_teachers
+                else file_config["Settings"].getboolean("skip_teachers", False),
                 log_level=args.log_level if args.log_level else file_config["Settings"]["log_level"],
                 school_id_map=normalize_schools(dict(file_config["SchoolMappings"])),
                 lusd_api_url=os.environ.get("LUSD_URL", "https://ucs.hessen.de"),
@@ -185,6 +193,9 @@ class ImportLUSD:
             school_ids = self.configuration.school_id_map[school_name]
 
             for role in (ROLE_STUDENT, ROLE_TEACHER):
+                if self.skip_role(role):
+                    logger.info(f"Skip download of LUSD data for role: {role}, in school: {school_name}")
+                    continue
                 logger.info(f"Starting download of LUSD data for role: {role}, in school: {school_name}")
                 file_path = self.get_lusd_data_save_path(school_name, role)
                 data = self.fetch_school_lusd_data(school_ids, role, file_path)
@@ -195,6 +206,14 @@ class ImportLUSD:
                     json.dump(data, f, indent=2)
                 logger.info(f"Finished download of LUSD data for role: {role}, in school: {school_name}")
                 logger.debug(f"Data saved to {data_path}")
+
+    def skip_role(self, role: str) -> bool:
+        if role == ROLE_STUDENT:
+            return self.configuration.skip_students
+        elif role == ROLE_TEACHER:
+            return self.configuration.skip_teachers
+        else:
+            return False
 
     def get_bearer_token(self) -> str:
         private_key_file = self.configuration.authentication_key_file_path
@@ -234,6 +253,9 @@ class ImportLUSD:
     def run_sisopi_import(self, school_name: str) -> None:
         """Run a single SiSoPi import for school `school_name`"""
         for role in (ROLE_STUDENT, ROLE_TEACHER):
+            if self.skip_role(role):
+                logger.info(f"Skip import for role {role}, in school {school_name}")
+                continue
             if role == ROLE_STUDENT:
                 import_config = self.configuration.student_import_config_path
             elif role == ROLE_TEACHER:
@@ -351,6 +373,20 @@ def get_args() -> Namespace:
         default=False,
         action="store_true",
         help=("Skip the fetching of LUSD DATA and import the previous data set again."),
+    )
+    parser.add_argument(
+        "--skip-students",
+        dest="skip_students",
+        default=False,
+        action="store_true",
+        help=("Skip fetching and importing stundents."),
+    )
+    parser.add_argument(
+        "--skip-teacher",
+        dest="skip_teachers",
+        default=False,
+        action="store_true",
+        help=("Skip fetching and importing teachers."),
     )
     parser.add_argument(
         "--dry-run",

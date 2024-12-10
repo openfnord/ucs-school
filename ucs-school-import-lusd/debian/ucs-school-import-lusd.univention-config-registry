@@ -4,6 +4,8 @@ Variables: ucsschool/import/lusd/log_level
 Variables: ucsschool/import/lusd/student_import_config_path
 Variables: ucsschool/import/lusd/teacher_import_config_path
 Variables: ucsschool/import/lusd/school_authority
+Variables: ucsschool/import/lusd/skip_students
+Variables: ucsschool/import/lusd/skip_teachers
 Variables: ^ucsschool/import/lusd/schools/.*
 
 Type: file

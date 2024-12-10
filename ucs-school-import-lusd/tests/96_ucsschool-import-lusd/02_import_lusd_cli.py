@@ -284,6 +284,8 @@ log_level = INFO
 student_import_config_path = {tmp_path / "user_import_lusd_student.json"}
 teacher_import_config_path = {tmp_path / "user_import_lusd_teacher.json"}
 school_authority = ucs test ☃
+skip_students = no
+skip_teachers = no
 
 [SchoolMappings]
 {schools[0]} = 1111111
@@ -324,7 +326,7 @@ def test_download(server: threading.Thread, config: None) -> None:
     )
     assert server.is_alive()
     lo, _ = getMachineConnection()
-    assert lo.searchDn(filter_format("(ucsschoolSourceUID=%s)", (TEST_SOURCE_UID,)))
+    assert len(lo.searchDn(filter_format("(ucsschoolSourceUID=%s)", (TEST_SOURCE_UID,)))) == 24
     # TBD: how much verification do we need?
 
 
@@ -550,3 +552,17 @@ def test_wrong_school_authority(config: None, server: threading.Thread, schools:
         "This is not allowed. Please check for mistakes or remove it.\n"
     ) in excinfo.value.output.decode("utf-8")
     assert server.is_alive()
+
+
+@pytest.mark.parametrize("role", ["students", "teachers"])
+def test_skip_role(role: str, config: None, server: threading.Thread, schools: List[str]) -> None:
+    old_config = CONFIG_PATH.read_text()
+    new_config = old_config.replace(f"skip_{role} = no", f"skip_{role} = yes")
+    CONFIG_PATH.write_text(new_config)
+    test_env = {**os.environ, "LUSD_URL": "http://localhost:32327"}
+    subprocess.check_call(  # nosec
+        ["/usr/share/ucs-school-import-lusd/scripts/lusd_import"], env=test_env
+    )
+    assert server.is_alive()
+    lo, _ = getMachineConnection()
+    assert len(lo.searchDn(filter_format("(ucsschoolSourceUID=%s)", (TEST_SOURCE_UID,)))) == 12

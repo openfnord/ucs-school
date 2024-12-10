@@ -30,3 +30,17 @@ Description[en]=Name of the school authority "schultraeger" in LUSD.
 Description[de]=Name des Schulträgers "schultraeger" in LUSD.
 Type=str
 Categories=ucsschool-base
+
+[ucsschool/import/lusd/skip_students]
+Description[en]=Should students be skipped during fetch and import. Default: no
+Description[de]=Sollen Schüler beim herunterladen und importieren übersprungen werden. Default: no
+Type=bool
+Default=no
+Categories=ucsschool-base
+
+[ucsschool/import/lusd/skip_teachers]
+Description[en]=Should teachers be skipped during fetch and import. Default: no
+Description[de]=Sollen Lehrer beim herunterladen und importieren übersprungen werden. Default: no
+Type=bool
+Default=no
+Categories=ucsschool-base
