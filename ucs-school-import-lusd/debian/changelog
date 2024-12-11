@@ -1,3 +1,12 @@
+ucs-school-import-lusd (1.0.1) unstable; urgency=medium
+
+  * Added a new configuration key "ucsschool/import/lusd/school_authority" to
+    check if all school mappings are part of the responsible school authority.
+
+    Issue univention/ucsschool#1317
+
+ -- Jürn Brodersen <brodersen@univention.de>  Wed, 11 Dec 2024 11:23:17 +0100
+
 ucs-school-import-lusd (1.0.0) unstable; urgency=medium
 
   * The ucs-school-import-lusd debian package is created in the context of the

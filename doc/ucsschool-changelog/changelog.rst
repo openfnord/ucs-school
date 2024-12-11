@@ -8,6 +8,15 @@
 Changelog
 *********
 
+.. _changelog-ucsschool-2024-12-16:
+
+Released on 2024-12-16
+======================
+
+Source package *ucs-school-import-lusd* in version ``1.0.1``:
+
+* Added: a new configuration key ``ucsschool/import/lusd/school_authority`` to check if all school mappings are part of the responsible school authority (:uv:bug:`57803`).
+
 .. _changelog-ucsschool-2024-11-21:
 
 Released on 2024-11-21
