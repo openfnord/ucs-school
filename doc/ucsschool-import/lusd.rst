@@ -248,6 +248,56 @@ Dabei werden die folgenden Werte aus der LUSD Datenbank standardmässig nach |UC
 ``klassenlehrerKlassen`` und ``klassenlehrerVertreterKlassen``
    wird für Lehrkräfte als ``school_classes`` verwendet.
 
+.. _lusd-class-level:
+
+Semesterstufen
+==============
+
+Die LUSD Datenbank exportiert Informationen zu den Semesterstufen von Schülern.
+Diese Informationen können vor allem für externe Dienste nützlich sein,
+die auf ein |UCSUAS| LDAP zugreifen.
+
+In vielen Fällen ist es ausreichend, ein Mapping des LUSD Attributes ``stufeSemester``
+auf ein erweitertes Attribut in |UCSUAS| einzurichten,
+wie im Abschnitt :ref:`configuration-mapping` beschrieben.
+
+.. note::
+
+   Die Erstellung eines erweiterten Attributes für das Speichern der Semesterstufe
+   können Sie im Abschnitt zu :external+uv-manual:ref:`central-extended-attrs`
+   im UCS Handbuch nachlesen.
+
+Sollten Sie die Semesterstufen in einem anderen Format benötigen,
+als es die LUSD Datenbank anbietet,
+können Sie einen Hook verwenden,
+den das Paket :program:`ucs-school-import-lusd` mitbringt.
+Dieser Hook wird als :file:`/usr/share/ucs-school-import-lusd/hooks/lusd_class_level_hook.py` abgelegt.
+Die Verwendung von Hooks können Sie im Abschnitt :ref:`extending-hooks` nachlesen.
+
+Um diesen Hook zu aktivieren,
+verwenden Sie den Befehl in :numref:`lusd-class-level-activate-hook-listing`
+und führen ihn auf dem |UCSUAS| System aus:
+
+.. code-block:: console
+   :caption: Hook aktivieren
+   :name: lusd-class-level-activate-hook-listing
+
+    $ ln -s /usr/share/ucs-school-import-lusd/hooks/lusd_class_level_hook.py \
+         /usr/share/ucs-school-import/pyhooks/
+
+Dabei wird die transformierte Semesterstufe in ein erweitertes Attribut mit dem Namen ``class_level`` geschrieben.
+
+.. note::
+
+   Der Hook ist eine generelle Implementierung
+   und kann gegebenenfalls von Ihren Anforderungen abweichen.
+   Wenn dies der Fall ist,
+   kopieren Sie den Hook und passen ihn Ihren Anforderungen entsprechend an.
+   Dazu ist die Anpassung der Felder ``UDM_CLASS_LEVEL_ATTRIBUTE``
+   und ``REGEX_PATTERNS`` erforderlich.
+   Ihre Funktionsweise und Hinweise zur Anpassung
+   entnehmen Sie der Dokumentation im Quellcode.
+
 .. _lusd-troubleshooting:
 
 Fehlerbehandlung

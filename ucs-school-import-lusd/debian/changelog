@@ -1,3 +1,9 @@
+ucs-school-import-lusd (1.0.3) unstable; urgency=medium
+
+  * Added an optional hook to import ``semesterStufe`` from LUSD.
+
+ -- Ole Schwiegert <schwiegert@univention.de>  Fri, 13 Dec 2024 10:55:00 +0100
+
 ucs-school-import-lusd (1.0.2) unstable; urgency=medium
 
   * Added the options to skip importing students or teachers.

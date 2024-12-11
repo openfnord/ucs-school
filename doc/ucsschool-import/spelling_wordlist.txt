@@ -9,3 +9,5 @@ Dictionaries
 UnsupportedEncodingError
 Logging
 Logs
+Semesterstufe
+Semesterstufen
