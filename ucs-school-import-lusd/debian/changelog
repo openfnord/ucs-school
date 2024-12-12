@@ -1,3 +1,9 @@
+ucs-school-import-lusd (1.0.2) unstable; urgency=medium
+
+  * Added the options to skip importing students or teachers.
+
+ -- Jürn Brodersen <brodersen@univention.de>  Thu, 12 Dec 2024 17:37:06 +0100
+
 ucs-school-import-lusd (1.0.1) unstable; urgency=medium
 
   * Added a new configuration key "ucsschool/import/lusd/school_authority" to
