@@ -210,6 +210,44 @@ Optionen auf der Kommandozeile überschreiben Einstellungen in UCR.
 
    Ist diese Option gesetzt, werden keine Lehrerdaten importiert.
 
+.. _lusd-import-config:
+
+Importkonfiguration
+-------------------
+
+Der LUSD Import verwendet spezielle Konfigurationsdateien.
+Diese befinden sich im Ordner :file:`/usr/share/ucs-school-import-lusd/import-config/`.
+
+Dabei werden die folgenden Werte aus der LUSD Datenbank standardmässig nach |UCSUAS| übernommen:
+
+``personalUID``
+   wird für Lehrkräfte als ``record_uid`` verwendet.
+   Bitte beachten Sie, dass die ``personalUID`` für eine Lehrkraft
+   für jede Schule unterschiedlich ist.
+   Das bedeutet, dass eine Lehrkraft für jede Schule in der sie sich befindet
+   ein eigenes Benutzerkonto bekommt.
+
+``schuelerUID``
+   wird für Schüler als ``record_uid`` verwendet.
+
+``vorname``
+   wird für Lehrkräfte als ``firstname`` verwendet.
+
+``nachname``
+   wird für Lehrkräfte als ``lastname`` verwendet.
+
+``schuelerVorname``
+   wird für Schüler als ``firstname`` verwendet.
+
+``schuelerNachname``
+   wird für Schüler als ``lastname`` verwendet.
+
+``klassenname``
+   wird für Schüler als ``school_classes`` verwendet.
+
+``klassenlehrerKlassen`` und ``klassenlehrerVertreterKlassen``
+   wird für Lehrkräfte als ``school_classes`` verwendet.
+
 .. _lusd-troubleshooting:
 
 Fehlerbehandlung
@@ -224,7 +262,44 @@ mit denen Sie eventuell ein Problem selbst lösen können.
    Konsultieren Sie immer zuerst die Log Datei, um potentielle Probleme zu identifizieren.
    Die Datei mit den Log-Einträgen lautet :file:`/var/log/univention/ucs-school-import-lusd.log`.
 
-..
-   TODO: Add troubleshooting scenarios
+Migration existierender Nutzerdaten zum LUSD Import
+---------------------------------------------------
 
+Dieser Abschnitt beschreibt,
+wie Sie eine Schule mit bereits existierenden Nutzerdaten
+für die Umstellung auf den LUSD Import vorbereiten müssen.
 
+Wollen Sie den LUSD Import für eine Schule einsetzen,
+für die schon Daten im LDAP existieren,
+müssen Sie vor dem ersten Import dafür sorgen,
+dass der Import die Daten aus der LUSD Datenbank korrekt
+den schon existierenden Benutzerkonten für Schüler und Lehrkräfte zuweist.
+Ansonsten werden die existierenden Benutzerkonten gelöscht und dann neu angelegt.
+
+Da es sich bei dem LUSD Import um einen |UCSUAS| Import handelt,
+werden Nutzer über die Kombination der Werte von ``source_uid`` und ``record_uid`` identifiziert.
+Diese beiden Werte müssen in den existierenden Daten so angepasst werden,
+dass sie für die jeweiligen Nutzer mit den Daten aus dem LUSD Import übereinstimmen.
+
+Die ``source_uid`` wird über die Konfigurationsdatei definiert
+und für den LUSD Import standardmässig auf ``LUSD_JSON_API`` gesetzt.
+Sie können entweder die ``source_uid`` bei allen existierenden Nutzern der Schule auf den Wert ``LUSD_JSON_API`` setzen
+oder Sie passen die Konfiguration des LUSD Imports so an,
+dass Ihre existierende ``source_uid`` verwendet wird.
+
+Die ``record_uid`` wird beim LUSD Import direkt aus der Datenbank bezogen.
+Jeder Schüler und jede Lehrkraft besitzen eine ``dienststellennummer``,
+die als ``record_uid`` verwendet wird.
+Um die Nutzer der Schule korrekt zu migrieren,
+müssen Sie für jedes Benutzerkonto eines Schülers und jeder Lehrkraft im LDAP die dazugehörige Dienststellennummer einmalig in Erfahrung bringen
+und als die neue ``record_uid`` im LDAP eintragen.
+Ein entsprechender Mechanismus zur Zuordnung der existierenden Daten zu Dienststellennummern kann nicht automatisch vom LUSD Import durchgeführt werden.
+Sie müssen eine geeignete Strategie entwickeln, die auf Ihre Datenstruktur Anwendung findet.
+
+Wenn Sie beide Werte bei den existierenden Nutzern angepasst haben,
+kann der LUSD Import gestartet werden und existierende Nutzer werden korrekt aktualisiert.
+
+.. note::
+
+   Aufgrund der unterschiedlichen und teils sehr spezifischen Handhabung der ``record_uid`` an den verschiedenen Schulen,
+   kann die Dokumentation an dieser Stelle kein allgemein hilfreiches Beispiel anbieten.
