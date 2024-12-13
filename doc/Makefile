@@ -2,7 +2,6 @@
 mkfile_path := $(abspath $(lastword $(MAKEFILE_LIST)))
 mkfile_dir := $(dir $(mkfile_path))
 DIRS := $(dir $(wildcard */Makefile))
-PO_DIRS := $(dir $(wildcard */locales))
 USER_ID := $(shell id -u)
 TARGET_LANG ?= de
 SPHINXOPTS ?= "-q -W --keep-going"
@@ -19,13 +18,13 @@ update-po:
 
 # Loop over all documents and update the PO files. Requires an environment with the Sphinx toolchain.
 update-po-nodocker:
-	set -e; for d in $(PO_DIRS); do d="$$d" sh -c 'cd "$$d" && make -e SPHINXOPTS="-q" gettext && sphinx-intl update -p _build/gettext -l "$(TARGET_L)"'; done
+	set -e; for d in */locales/"$(TARGET_L)"; do d="$$(dirname $$(dirname $$d))" sh -c 'cd "$$d" && make -e SPHINXOPTS="-q" gettext && sphinx-intl update -p _build/gettext -l "$(TARGET_L)"'; done
 
 stat-po:
 	$(DOCKER_USER_CMD) $(SPHINX_DOCKER_BASE) make -e TARGET_L="$(TARGET_LANG)" stat-po-nodocker
 
 stat-po-nodocker:
-	set -e; for d in $(PO_DIRS); do d="$$d" sh -c 'cd "$$d" && echo "doc/$$d:" && sphinx-intl stat -l "$(TARGET_L)"'; done
+	set -e; for d in */locales/"$(TARGET_L)"; do d="$$(dirname $$(dirname $$d))" sh -c 'cd "$$d" && echo "doc/$$d:" && sphinx-intl stat -l "$(TARGET_L)"'; done
 
 latexpdf:
 	$(DOCKER_CMD) $(SPHINX_DOCKER_FULL) /bin/bash -c 'for d in $(DIRS);do make -C "$$d" -e SPHINXOPTS="$(SPHINXOPTS)" "$@"; done'
