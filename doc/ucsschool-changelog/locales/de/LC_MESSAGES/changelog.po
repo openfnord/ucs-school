@@ -22,12 +22,12 @@ msgid "Changelog"
 msgstr "Changelog"
 
 #: ../../changelog.rst:14
-msgid "Released on 2024-12-16"
-msgstr "Veröffentlicht am 16. Dezember 2024"
+msgid "Released on 2024-12-17"
+msgstr "Veröffentlicht am 17. Dezember 2024"
 
 #: ../../changelog.rst:16
-msgid "Source package *ucs-school-import-lusd* in version ``1.0.3``:"
-msgstr "Quellpaket *ucs-school-import-lusd* in Version ``1.0.3``:"
+msgid "Source package *ucs-school-import-lusd* in version ``1.0.4``:"
+msgstr "Quellpaket *ucs-school-import-lusd* in Version ``1.0.4``:"
 
 #: ../../changelog.rst:18
 msgid ""
