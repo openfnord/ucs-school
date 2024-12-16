@@ -89,7 +89,10 @@ class LUSDClassLevel(UserPyHook):  # type: ignore[misc]
     pre_modify = pre_create
 
     def calculate_class_level(self, user):  # type: ignore[no-untyped-def]
-        raw_data = user.input_data.get(LUSDClassLevel.LUSD_CLASS_LEVEL_ATTRIBUTE, "")
+        if isinstance(user.input_data, dict):
+            raw_data = user.input_data.get(LUSDClassLevel.LUSD_CLASS_LEVEL_ATTRIBUTE, "")
+        else:
+            raw_data = ""  # happens on move to limbo ou
         if not isinstance(raw_data, str):
             raw_data = str(raw_data)
         class_level = None

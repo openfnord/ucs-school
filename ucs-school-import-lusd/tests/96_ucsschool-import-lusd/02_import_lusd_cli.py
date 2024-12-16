@@ -59,7 +59,7 @@ from ldap.filter import filter_format
 
 import univention.testing.ucsschool.ucs_test_school as testing_ucsschool
 from ucsschool.import_lusd.cli import CONFIG_PATH, Configuration
-from univention.admin.uldap import getMachineConnection
+from univention.admin.uldap import getAdminConnection, getMachineConnection
 
 TEACHER_CONFIG_PATH = pathlib.Path(
     "/usr/share/ucs-school-import-lusd/import-config/user_import_lusd_teacher.json"
@@ -220,7 +220,7 @@ def private_rsa_key(backup_files: None) -> None:
 
 
 @pytest.fixture()
-def backup_files() -> Generator[None, None, None]:
+def backup_files(tmp_path: pathlib.Path) -> Generator[None, None, None]:
     backup_suffix = f".backup_{int(time())}"
     backup_auth_key = Configuration.authentication_key_file_path.with_suffix(backup_suffix)
     try:
@@ -295,6 +295,30 @@ skip_teachers = no
         fd.write(test_config)
 
 
+@pytest.fixture(autouse=True, params=["with_hook", "no_hook"])
+def activate_hook(request: pytest.FixtureRequest, tmp_path: pathlib.Path) -> Generator[None, None, None]:
+    hook_path = pathlib.Path("/usr/share/ucs-school-import/pyhooks/lusd_class_level_hook.py")
+    hook_path_source = pathlib.Path("/usr/share/ucs-school-import-lusd/hooks/lusd_class_level_hook.py")
+    try:
+        hook_path.replace(tmp_path / "lusd_class_level_hook.py")
+    except FileNotFoundError:
+        pass
+    if request.param == "with_hook":
+        shutil.copy(hook_path_source, hook_path)
+        hook = hook_path.read_text()
+        hook.replace(
+            'UDM_CLASS_LEVEL_ATTRIBUTE = "class_level"', 'UDM_CLASS_LEVEL_ATTRIBUTE = "description"'
+        )
+        hook_path.write_text(hook)
+    yield
+    if request.param == "with_hook":
+        hook_path.unlink()
+    try:
+        (tmp_path / "lusd_class_level_hook.py").replace(hook_path)
+    except FileNotFoundError:
+        pass
+
+
 @pytest.fixture()
 def server(private_rsa_key: None) -> Generator[threading.Thread, None, None]:
     server_address = ("", 32327)
@@ -317,6 +341,17 @@ def existing_data(schools: List[str]) -> Generator[None, None, None]:
     yield
     shutil.rmtree(Configuration.lusd_data_save_path / schools[0])
     shutil.rmtree(Configuration.lusd_data_save_path / schools[1])
+
+
+@pytest.fixture(autouse=True)
+def clear_limbo() -> Generator[None, None, None]:
+    yield
+    lo, _ = getAdminConnection()
+    limbo_users = lo.searchDn(
+        filter_format("(&(ucsschoolSourceUID=%s)(ucsschoolSchool=%s))", (TEST_SOURCE_UID, "lusd-limbo"))
+    )
+    for dn in limbo_users:
+        lo.delete(dn)
 
 
 def test_download(server: threading.Thread, config: None) -> None:

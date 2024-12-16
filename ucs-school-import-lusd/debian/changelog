@@ -1,3 +1,9 @@
+ucs-school-import-lusd (1.0.4) unstable; urgency=medium
+
+  * Fix tests
+
+ -- Jürn Brodersen <brodersen@univention.de>  Mon, 16 Dec 2024 12:50:12 +0100
+
 ucs-school-import-lusd (1.0.3) unstable; urgency=medium
 
   * Added an optional hook to import ``semesterStufe`` from LUSD.
