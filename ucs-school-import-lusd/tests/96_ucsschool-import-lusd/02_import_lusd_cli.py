@@ -296,7 +296,7 @@ skip_teachers = no
 
 
 @pytest.fixture(autouse=True, params=["with_hook", "no_hook"])
-def activate_hook(request: pytest.FixtureRequest, tmp_path: pathlib.Path) -> Generator[None, None, None]:
+def activate_hook(request: Any, tmp_path: pathlib.Path) -> Generator[None, None, None]:
     hook_path = pathlib.Path("/usr/share/ucs-school-import/pyhooks/lusd_class_level_hook.py")
     hook_path_source = pathlib.Path("/usr/share/ucs-school-import-lusd/hooks/lusd_class_level_hook.py")
     try:
