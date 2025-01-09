@@ -315,6 +315,8 @@ dem installierten *Veyon Configurator* für eine Schlüsseldatei-Authentifizieru
 konfiguriert werden. Zunächst muss im *Veyon Configurator* unter
 :menuselection:`Allgemein --> Authentifizierung` die Methode
 Schlüsseldatei-Authentifizierung ausgewählt werden.
+Anschließend muss unter :menuselection:`Allgemein --> Benutzergruppen` die Checkbox *Benutzergruppen von Domain einbeziehen* aktiviert werden.
+Als *Benutzergruppen-Backend* wird der Standard *Systembenutzergruppen* verwendet.
 
 .. _school-windows-veyon-fig2:
 
@@ -323,17 +325,10 @@ Schlüsseldatei-Authentifizierung ausgewählt werden.
 
    *Veyon* Konfiguration: Auswahl der Authentifizierungs-Methode
 
-Anschließend muss unter *Zugriffskontrolle* die Checkbox *Verwendung von
-Domaingruppen aktivieren* aktiviert werden. Als *Benutzergruppen-Backend* wird
-der Standard *Systembenutzergruppen* verwendet.
-
-.. _school-windows-veyon-fig3:
-
-.. figure:: /images/veyon-access-control.png
-   :alt: *Veyon* Konfiguration: Zugriffskontrolle
-
-   *Veyon* Konfiguration: Zugriffskontrolle
-
+.. note::
+   Falls ein *Veyon Configurator* mit Version 4.7 oder 4.8 verwendet wird, muss anstatt der Checkbox *Benutzergruppen von Domain einbeziehen*
+   unter :menuselection:`Allgemein --> Benutzergruppen` die Checkbox *Verwendung von Domaingruppen aktivieren* unter
+   :menuselection:`Zugriffskontrolle` aktiviert werden.
 
 Schließlich muss der öffentliche Schlüssel importiert werden, damit der
 Schulserver Zugriff auf das installierte *Veyon* Backend erhält. Der Import kann
