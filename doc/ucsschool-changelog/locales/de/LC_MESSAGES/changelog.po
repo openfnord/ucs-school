@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: UCS@school - 5.0 v5 Changelog \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-13 09:53+0000\n"
+"POT-Creation-Date: 2025-01-08 08:30+0000\n"
 "PO-Revision-Date: 2023-08-02 09:20+0000\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,14 +22,28 @@ msgid "Changelog"
 msgstr "Changelog"
 
 #: ../../changelog.rst:14
+msgid "Released on 2025-01-15"
+msgstr "Veröffentlicht am 15. Januar 2025"
+
+#: ../../changelog.rst:16
+msgid "Source package *ucs-school-veyon-windows* in version ``4.9.1.0-ucs5.0-0``:"
+msgstr "Quellpaket *ucs-school-veyon-windows* in Version ``4.9.1.0-ucs5.0-0``:"
+
+#: ../../changelog.rst:18
+msgid "Updated: New version of the Veyon Windows client (:uv:bug:`57837`)."
+msgstr ""
+"Aktualisiert: Eine neue Version des Veyon Windows Clients wurde "
+"veröffentlicht (:uv:bug:`57837`)."
+
+#: ../../changelog.rst:23
 msgid "Released on 2024-12-17"
 msgstr "Veröffentlicht am 17. Dezember 2024"
 
-#: ../../changelog.rst:16
+#: ../../changelog.rst:25
 msgid "Source package *ucs-school-import-lusd* in version ``1.0.4``:"
 msgstr "Quellpaket *ucs-school-import-lusd* in Version ``1.0.4``:"
 
-#: ../../changelog.rst:18
+#: ../../changelog.rst:27
 msgid ""
 "Added: a new configuration key ``ucsschool/import/lusd/school_authority``"
 " to check if all school mappings are part of the responsible school "
@@ -40,28 +54,29 @@ msgstr ""
 "Schulzuordnungen Teil der zuständigen Schulbehörde sind "
 "(:uv:bug:`57803`)."
 
-#: ../../changelog.rst:20
+#: ../../changelog.rst:29
 msgid "Added: options to skip importing students or teachers (:uv:bug:`57804`)."
 msgstr ""
 "Hinzugefügt: Optionen zum Überspringen des Imports von Schülern oder "
 "Lehrern (:uv:bug:`57804`)."
 
-#: ../../changelog.rst:22
+#: ../../changelog.rst:31
 msgid ""
-"Added: optional hook to import the ``semesterStufe`` from the LUSD database "
-"(:uv:bug:`57805`)."
+"Added: optional hook to import the ``semesterStufe`` from the LUSD "
+"database (:uv:bug:`57805`)."
 msgstr ""
-"Hinzugefügt: Optionaler Hook, um die ``semesterStufe`` aus der LUSD Datenbank zu importieren (:uv:bug:`57805`)."
+"Hinzugefügt: Optionaler Hook, um die ``semesterStufe`` aus der LUSD "
+"Datenbank zu importieren (:uv:bug:`57805`)."
 
-#: ../../changelog.rst:27
+#: ../../changelog.rst:36
 msgid "Released on 2024-11-21"
 msgstr "Veröffentlicht am 21. November 2024"
 
-#: ../../changelog.rst:29
+#: ../../changelog.rst:38
 msgid "Source package *ucs-school-import* in version ``18.0.55``:"
 msgstr "Quellpaket *ucs-school-import* in Version ``18.0.55``:"
 
-#: ../../changelog.rst:31
+#: ../../changelog.rst:40
 msgid ""
 "Fixed: The import hook ``create_new_ox_contexts_kelvin.py`` failed to "
 "create users when the default context is used (:uv:bug:`57728`)."
@@ -70,7 +85,7 @@ msgstr ""
 " wenn ein Benutzer mit dem Standard OX Kontext erstellt wurde "
 "(:uv:bug:`57728`)."
 
-#: ../../changelog.rst:32
+#: ../../changelog.rst:41
 msgid ""
 "Fixed: The Django front end of the import API did provide an outdated, "
 "broken link which has been replaced (:uv:bug:`57673`)."
@@ -78,7 +93,7 @@ msgstr ""
 "Behoben: Es wurde ein defekter Link im Django Frontend der Import API "
 "ersetzt (:uv:bug:`57673`)."
 
-#: ../../changelog.rst:33
+#: ../../changelog.rst:42
 msgid ""
 "Fixed: When an unhandled error occurred during the graphical user import,"
 " no detailed error information was shown in the error log "
@@ -88,25 +103,25 @@ msgstr ""
 "Benutzerimports auftrat, waren keine detaillierten Informationen zu "
 "diesem Fehler in den Protokollen zu finden (:uv:bug:`57607`)."
 
-#: ../../changelog.rst:35
+#: ../../changelog.rst:44
 msgid "Source package *ucs-school-veyon-windows* in version ``4.9.0.0-ucs5.0-0``"
 msgstr "Quellpaket *ucs-school-veyon-windows* in Version ``4.9.0.0-ucs5.0-0``:"
 
-#: ../../changelog.rst:37
+#: ../../changelog.rst:46
 msgid "Updated: New version of the Veyon Windows client (:uv:bug:`57702`)."
 msgstr ""
 "Aktualisiert: Eine neue Version des Veyon Windows Clients wurde "
 "veröffentlicht (:uv:bug:`57702`)."
 
-#: ../../changelog.rst:42
+#: ../../changelog.rst:51
 msgid "Released on 2024-10-17"
 msgstr "Veröffentlicht am 17. Oktober 2024"
 
-#: ../../changelog.rst:44
+#: ../../changelog.rst:53
 msgid "Source package *ucs-school-umc-exam* in version ``10.0.15``:"
 msgstr "Quellpaket *ucs-school-umc-exam* in Version ``10.0.15``:"
 
-#: ../../changelog.rst:46
+#: ../../changelog.rst:55
 msgid ""
 "Fixed: Exam related files do no longer receive duplicate NT ACLs, which "
 "previously could result in an OSError 28. We have a clean up script for "
@@ -117,17 +132,17 @@ msgstr ""
 "führen konnte. Wir haben ein Reinigungsskript für bereits duplizierte "
 "ACLs verfügbar unter :uv:help:`23543` (:uv:bug:`57667`)."
 
-#: ../../changelog.rst:48
+#: ../../changelog.rst:57
 msgid "Improved error handling during exam clean up (:uv:bug:`56766`)."
 msgstr ""
 "Verbesserte Fehlerbehandlung beim abschließen einer Klassenarbeit "
 "(:uv:bug:`56766`)."
 
-#: ../../changelog.rst:50
+#: ../../changelog.rst:59
 msgid "Source package *ucs-school-umc-distribution* in version ``18.0.10``:"
 msgstr "Quellpaket *ucs-school-umc-distribution* in Version ``18.0.10``:"
 
-#: ../../changelog.rst:52
+#: ../../changelog.rst:61
 msgid ""
 "Fixed: During exam collection, a permission error was written to the log "
 "file. Note: Although shown as an error, this had no negative effect on "
@@ -138,17 +153,17 @@ msgstr ""
 "Fehler markiert, hat aber keine negative Auswirkung auf das einsammeln "
 "der Klassenarbeit (:uv:bug:`57661`)."
 
-#: ../../changelog.rst:54
+#: ../../changelog.rst:63
 msgid "Source package *ucs-school-umc-computerroom* in version ``12.0.24``:"
 msgstr "Quellpaket *ucs-school-umc-computerroom* in Version ``12.0.24``:"
 
-#: ../../changelog.rst:56
+#: ../../changelog.rst:65
 msgid "Improved the error handling when managing SMB processes (:uv:bug:`56904`)."
 msgstr ""
 "Die Fehlerbehandlung beim Verwalten von SMB Prozessen wurde verbessert "
 "(:uv:bug:`56904`)."
 
-#: ../../changelog.rst:57
+#: ../../changelog.rst:66
 msgid ""
 "Improved the error handling, if non existent computers were configured "
 "for a computer room (:uv:bug:`43243`)."
@@ -156,15 +171,15 @@ msgstr ""
 "Die Fehlerbehandlung bei falsch eingerichteten Computerräumen wurde "
 "verbessert (:uv:bug:`43243`)."
 
-#: ../../changelog.rst:62
+#: ../../changelog.rst:71
 msgid "Released on 2024-10-01"
 msgstr "Veröffentlicht am 01. Oktober 2024"
 
-#: ../../changelog.rst:64
+#: ../../changelog.rst:73
 msgid "Source package *ucs-school-umc-computerroom* in version ``12.0.22``:"
 msgstr "Quellpaket *ucs-school-umc-computerroom* in Version ``12.0.22``:"
 
-#: ../../changelog.rst:66
+#: ../../changelog.rst:75
 msgid ""
 "Fixed: The computer room UMC module will no longer have large response "
 "times when offline computers are present (:uv:bug:`57631`)."
@@ -173,15 +188,15 @@ msgstr ""
 " wenn sich im Computerraum heruntergefahrene Computer befinden "
 "(:uv:bug:`57631`)."
 
-#: ../../changelog.rst:71
+#: ../../changelog.rst:80
 msgid "Released on 2024-09-26"
 msgstr "Veröffentlicht am 26. September 2024"
 
-#: ../../changelog.rst:73
+#: ../../changelog.rst:82
 msgid "Source package *ucs-school-umc-computerroom* in version ``12.0.21``:"
 msgstr "Quellpaket *ucs-school-umc-computerroom* in Version ``12.0.21``:"
 
-#: ../../changelog.rst:75
+#: ../../changelog.rst:84
 msgid ""
 "Improved the performance of the UMC computer room module: More computers "
 "can be monitored at the same time (:uv:bug:`57610`)."
@@ -189,7 +204,7 @@ msgstr ""
 "Die Performance des UMC Computerraum Moduls wurde verbessert. Es können "
 "nun mehr Computer zum selben Zeitpunkt überwacht werden (:uv:bug:`57610`)"
 
-#: ../../changelog.rst:76
+#: ../../changelog.rst:85
 msgid ""
 "Improved the resource usage of the UMC computer room module: Unused "
 "computer room sessions will consume less resources (:uv:bug:`57099`)."
@@ -198,15 +213,15 @@ msgstr ""
 "Unbenutzte Computerraum-Sitzungen verbrauchen nun weniger Ressourcen "
 "(:uv:bug:`57099`)."
 
-#: ../../changelog.rst:78
+#: ../../changelog.rst:87
 msgid "Source package *ucs-school-veyon-client* in version ``2.0.9``:"
 msgstr "Quellpaket *ucs-school-veyon-client* in Version ``2.0.9``:"
 
-#: ../../changelog.rst:80
+#: ../../changelog.rst:89
 msgid "Improved the performance of the Veyon Python client (:uv:bug:`57610`)."
 msgstr "Die Performance des Veyon Python Client wurde verbessert (:uv:bug:`57610`)"
 
-#: ../../changelog.rst:81
+#: ../../changelog.rst:90
 msgid ""
 "The authentication error pop up which is sometimes shown on the monitored"
 " Windows clients will no longer appear (:uv:bug:`53995`)."
@@ -215,15 +230,15 @@ msgstr ""
 " auf den Windowsrechnern angezeigt wurde erscheint nicht mehr "
 "(:uv:bug:`53995`)."
 
-#: ../../changelog.rst:86
+#: ../../changelog.rst:95
 msgid "Released on 2024-09-24"
 msgstr "Veröffentlicht am 24. September 2024"
 
-#: ../../changelog.rst:88
+#: ../../changelog.rst:97
 msgid "Source package *ucs-school-import-lusd* in version ``1.0.0``:"
 msgstr "Quellpaket *ucs-school-import-lusd* in Version ``1.0.0``:"
 
-#: ../../changelog.rst:90
+#: ../../changelog.rst:99
 msgid ""
 "Added: A new package which supports importing users and groups from the "
 "LUSD API into UCS\\@school. See the :external+uv-import:ref:`LUSD Import "
