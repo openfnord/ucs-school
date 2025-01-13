@@ -2,6 +2,10 @@ stages:
   - prepare
   - lint
   - build
+  - test
+
+variables:
+  IMAGE_UCS_EC2_TOOLS: "gitregistry.knut.univention.de/univention/dist/ucs-ec2-tools:latest"
 
 include:
   - project: univention/dist/docker-services
@@ -24,3 +28,29 @@ include:
 run pre-commit:
   stage: lint
   extends: .pre-commit
+
+integration_tests:
+  image: $IMAGE_UCS_EC2_TOOLS
+  stage: test
+  needs: []
+  rules:
+    - changes:
+        paths:
+          - "*/**/debian/changelog"
+      when: manual
+      allow_failure: False
+  variables:
+    TARGET_VERSION: "5.0-9"
+  before_script:
+    - apt-get update && apt-get install -y rsync git || echo "packages installed."
+    - .gitlab-ci/prepare_secrets.sh
+    - mkdir results
+    - git fetch --depth 1 origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME:compare
+  script:
+    - export PACKAGES_TO_INSTALL=$(git diff --name-only $CI_COMMIT_BRANCH compare | grep debian/changelog | sed 's/\(.*\)\/debian\/changelog/\1/g' | tr '\n' ' ')
+    - unset OS_PROJECT_NAME
+    - . clouds.rc && ucs-openstack-create --replace -t -c .gitlab-ci/branch_tests.cfg
+    - .gitlab-ci/parse_junit.py
+  artifacts:
+    reports:
+      junit: results/**/test-reports/**/*.xml

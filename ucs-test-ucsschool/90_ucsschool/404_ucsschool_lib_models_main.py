@@ -2,7 +2,7 @@
 ## -*- coding: utf-8 -*-
 ## desc: test ucsschool.lib.models.__main__
 ## roles: [domaincontroller_master]
-## tags: [apptest,ucsschool,ucsschool_import1]
+## tags: [apptest,ucsschool,ucsschool_import1,ucs-school-lib]
 ## exposure: dangerous
 ## packages:
 ##   - python3-ucsschool-lib
