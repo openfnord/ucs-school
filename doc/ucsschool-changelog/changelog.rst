@@ -10,7 +10,7 @@ Changelog
 
 .. _changelog-ucsschool-2025-01-15:
 
-Released on 2025-01-15
+Released on 2025-01-14
 ======================
 
 Source package *ucs-school-veyon-windows* in version ``4.9.1.0-ucs5.0-0``:

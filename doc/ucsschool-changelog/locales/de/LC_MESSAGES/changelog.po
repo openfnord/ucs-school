@@ -22,8 +22,8 @@ msgid "Changelog"
 msgstr "Changelog"
 
 #: ../../changelog.rst:14
-msgid "Released on 2025-01-15"
-msgstr "Veröffentlicht am 15. Januar 2025"
+msgid "Released on 2025-01-14"
+msgstr "Veröffentlicht am 14. Januar 2025"
 
 #: ../../changelog.rst:16
 msgid "Source package *ucs-school-veyon-windows* in version ``4.9.1.0-ucs5.0-0``:"
