@@ -42,14 +42,14 @@ integration_tests:
   variables:
     TARGET_VERSION: "5.0-9"
   before_script:
-    - apt-get update && apt-get install -y rsync git || echo "packages installed."
+    - apt-get update && apt-get install -y rsync git colorized-logs || echo "packages installed."
     - .gitlab-ci/prepare_secrets.sh
     - mkdir results
     - git fetch --depth 1 origin $CI_MERGE_REQUEST_TARGET_BRANCH_NAME:compare
   script:
     - export PACKAGES_TO_INSTALL=$(git diff --name-only $CI_COMMIT_BRANCH compare | grep debian/changelog | sed 's/\(.*\)\/debian\/changelog/\1/g' | tr '\n' ' ')
     - unset OS_PROJECT_NAME
-    - . clouds.rc && ucs-openstack-create --replace -t -c .gitlab-ci/branch_tests.cfg
+    - . clouds.rc && ucs-openstack-create --replace -t -c .gitlab-ci/branch_tests.cfg | ansi2txt
     - .gitlab-ci/parse_junit.py
   artifacts:
     reports:
