@@ -1,3 +1,10 @@
+ucs-school-metapackage (13.0.19) unstable; urgency=low
+
+  * Bug #57897: Issue univention/ucsschool#1354: register special
+    ucsschool-join-hooks for UCS 4.4 and UCS 5.0+
+
+ -- Sönke Schwardt-Krummrich <schwardt@univention.de>  Tue, 28 Jan 2025 18:03:29 +0100
+
 ucs-school-metapackage (13.0.18) unstable; urgency=medium
 
   * Issue univention/components/keycloak-app#207: Add keycloak kerberos SPN to samba

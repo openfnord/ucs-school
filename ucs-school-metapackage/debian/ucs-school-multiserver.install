@@ -4,4 +4,5 @@ ucsschool.png usr/share/univention-management-console-frontend/js/dijit/themes/u
 ucsschool.svg usr/share/univention-management-console-frontend/js/dijit/themes/umc/icons/scalable
 app_version.py usr/share/ucs-school-metapackage/scripts
 ucsschool-join-hook.py usr/share/ucs-school-metapackage/
+ucsschool-join-hook-py27.py usr/share/ucs-school-metapackage/
 create_demoportal.py usr/share/ucs-school-metapackage/scripts
