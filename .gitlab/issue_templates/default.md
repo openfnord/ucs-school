@@ -1,8 +1,8 @@
 ## Accounting
 
-- Univention GmbH (424)
-- Development: UCS@school Development (22605)
-
+- Customer: `[1] Univention GmbH`
+- Project: `[2102] 22605 - Univention - Entwicklung - UCS@school`
+- Task: _Please consult the epic!_
 
 ## Context/description
 
