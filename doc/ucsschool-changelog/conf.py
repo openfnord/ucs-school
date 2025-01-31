@@ -173,7 +173,7 @@ linkcheck_allowed_redirects = {
     r"https://help\.univention\.com/t/\d+": r"https://help\.univention\.com/t/[\w-]+/\d+",
 }
 
-univention_changelog_previous_release = "5.0 v5"
+univention_changelog_previous_release = "5.0 v6"
 univention_changelog_builder = "ucsschool"
 
 # See Univention Sphinx Extension for its options.

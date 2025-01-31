@@ -12,7 +12,7 @@ stages:
   image: $SPHINX_BASE
   variables:
     DOC_TARGET_VERSION: "5.0"
-    CHANGELOG_TARGET_VERSION: "5.0v6"
+    CHANGELOG_TARGET_VERSION: "5.0v7"
     language: "de"
 
 .sphinx-html:

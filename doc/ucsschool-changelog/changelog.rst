@@ -8,92 +8,11 @@
 Changelog
 *********
 
-.. _changelog-ucsschool-2025-01-15:
+.. _changelog-ucsschool-2025-02-03:
 
-Released on 2025-01-14
+Released on 2025-02-11
 ======================
 
-Source package *ucs-school-veyon-windows* in version ``4.9.1.0-ucs5.0-0``:
+Source package *ucs-school-metapackage* in version ``13.0.19``:
 
-* Updated: New version of the Veyon Windows client (:uv:bug:`57837`).
-
-.. _changelog-ucsschool-2024-12-17:
-
-Released on 2024-12-17
-======================
-
-Source package *ucs-school-import-lusd* in version ``1.0.4``:
-
-* Added: a new configuration key ``ucsschool/import/lusd/school_authority`` to check if all school mappings are part of the responsible school authority (:uv:bug:`57803`).
-
-* Added: options to skip importing students or teachers (:uv:bug:`57804`).
-
-* Added: optional hook to import the ``semesterStufe`` from the LUSD database (:uv:bug:`57805`).
-
-.. _changelog-ucsschool-2024-11-21:
-
-Released on 2024-11-21
-======================
-
-Source package *ucs-school-import* in version ``18.0.55``:
-
-* Fixed: The import hook ``create_new_ox_contexts_kelvin.py`` failed to create users when the default context is used (:uv:bug:`57728`).
-* Fixed: The Django front end of the import API did provide an outdated, broken link which has been replaced (:uv:bug:`57673`).
-* Fixed: When an unhandled error occurred during the graphical user import, no detailed error information was shown in the error log (:uv:bug:`57607`).
-
-Source package *ucs-school-veyon-windows* in version ``4.9.0.0-ucs5.0-0``
-
-* Updated: New version of the Veyon Windows client (:uv:bug:`57702`).
-
-.. _changelog-ucsschool-2024-10-17:
-
-Released on 2024-10-17
-======================
-
-Source package *ucs-school-umc-exam* in version ``10.0.15``:
-
-* Fixed: Exam related files do no longer receive duplicate NT ACLs, which previously could result in an OSError 28. We have a clean up script for already duplicated ACL available at :uv:help:`23543` (:uv:bug:`57667`).
-
-* Improved error handling during exam clean up (:uv:bug:`56766`).
-
-Source package *ucs-school-umc-distribution* in version ``18.0.10``:
-
-* Fixed: During exam collection, a permission error was written to the log file. Note: Although shown as an error, this had no negative effect on exam collection (:uv:bug:`57661`).
-
-Source package *ucs-school-umc-computerroom* in version ``12.0.24``:
-
-* Improved the error handling when managing SMB processes (:uv:bug:`56904`).
-* Improved the error handling, if non existent computers were configured for a computer room (:uv:bug:`43243`).
-
-.. _changelog-ucsschool-2024-10-01:
-
-Released on 2024-10-01
-======================
-
-Source package *ucs-school-umc-computerroom* in version ``12.0.22``:
-
-* Fixed: The computer room UMC module will no longer have large response times when offline computers are present (:uv:bug:`57631`).
-
-.. _changelog-ucsschool-2024-09-26:
-
-Released on 2024-09-26
-======================
-
-Source package *ucs-school-umc-computerroom* in version ``12.0.21``:
-
-* Improved the performance of the UMC computer room module: More computers can be monitored at the same time (:uv:bug:`57610`).
-* Improved the resource usage of the UMC computer room module: Unused computer room sessions will consume less resources (:uv:bug:`57099`).
-
-Source package *ucs-school-veyon-client* in version ``2.0.9``:
-
-* Improved the performance of the Veyon Python client (:uv:bug:`57610`).
-* The authentication error pop up which is sometimes shown on the monitored Windows clients will no longer appear (:uv:bug:`53995`).
-
-.. _changelog-ucsschool-2024-09-24:
-
-Released on 2024-09-24
-======================
-
-Source package *ucs-school-import-lusd* in version ``1.0.0``:
-
-* Added: A new package which supports importing users and groups from the LUSD API into UCS\@school. See the :external+uv-import:ref:`LUSD Import section <lusd-import>` in the UCS\@school Import manual for more information (:uv:bug:`57547`).
+* Updated: In preparation for the UCS@school 5.2 update, two join hooks are now installed in the system. The first uses Python 2.7 and is registered for UCS 4.4 systems only. The second uses Python 3 and is registered in the LDAP for UCS 5.0 and newer (:uv:bug:`57897`).
