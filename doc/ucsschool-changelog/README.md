@@ -32,6 +32,8 @@ Update configuration settings in `doc/ucsschool-changelog/conf.py`:
 * Set `release` to `5.0 v6`. It may also have to be adapted in [base-doc.yml](../../.gitlab-ci/base-doc.yml).
 * Keep `version` at `5.0`.
 
+Update previous and current version in `index.rst`.
+
 Add additional update information in the `*.rst` files. It might help to run `make clean` inside the docker container when your are doing a release.
 
 ### Editing and building the changelog
